@@ -1,5 +1,7 @@
 # Guestbook-service
 
+Copied [from](https://github.com/redhat-developer-demos/kubernetes-lab/tree/master/guestbook-service)
+
 Build and Deploy guestbook-service locally
 ------------------------------------------
 
