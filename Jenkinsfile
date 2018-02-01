@@ -14,7 +14,7 @@ def label = "buildpod.${env.JOB_NAME}.${env.BUILD_NUMBER}".replace('-', '_').rep
 
 def branchName = utils.getBranch()
 
-mavenNode(mavenImage: 'openjdk:8') {
+mavenNode(mavenImage: 'maven:3.5-jdk-8') {
     container(name: 'maven') {
 
         stage('Checkout') {
