@@ -9,21 +9,40 @@ try {
 }
 
 def canaryVersion = "${versionPrefix}.${env.BUILD_NUMBER}"
-def utils = new io.fabric8.Utils()
 def label = "buildpod.${env.JOB_NAME}.${env.BUILD_NUMBER}".replace('-', '_').replace('/', '_')
 
-def branchName = utils.getBranch()
+// TODO: Change to 'lab'
+def envLab = 'test2'
+def stashName = ""
 
-mavenNode(mavenImage: 'maven:3.5-jdk-8') {
+// Hardcoded registry url
+//TODO: Should be picked from ENV varaible
+def dockerRegistryURL="docker.tools.stackator.com:443"
+
+mavenNode(mavenImage: 'openjdk:8') {
     container(name: 'maven') {
 
         stage('Checkout') {
             checkout scm
+            git_branch = scm.getBranches()[0].toString()
         }
 
-        stage('Clean & Package') {
-            sh 'mvn clean package'
+        stage('Clean') {
+            sh 'chmod +x mvnw'
+            sh './mvnw clean'
         }
 
+        stage('Canary Release') {
+            mavenCanaryRelease2 {
+              version = canaryVersion
+            }
+        }
+
+        stage('Rollout to Dev') {
+            kubernetesApply(registry: dockerRegistryURL, environment: envLab)
+            //stash deployments
+            stashName = label
+            stash includes: '**/*.yml', name: stashName
+        }
     }
 }
