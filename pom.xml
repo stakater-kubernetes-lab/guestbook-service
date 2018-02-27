@@ -200,7 +200,7 @@
 					<verbose>true</verbose>
 					<resources>
 						<env>
-							<JAVA_APP_JAR>/deployments/${project.artifactId}-fat.jar</JAVA_APP_JAR >
+							<JAVA_APP_JAR>/deployments/${project.artifactId}-swarm.jar</JAVA_APP_JAR >
 						</env>
 					</resources>
 				</configuration>
